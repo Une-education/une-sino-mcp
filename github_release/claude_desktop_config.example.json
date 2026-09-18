@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "atoa-legal": {
+      "command": "python3",
+      "args": ["/chemin/absolu/vers/mcp_server.py"],
+      "env": {
+        "ATOA_API_KEY": "sk_live_votre_cle_ici_si_vous_en_avez_une"
+      }
+    }
+  }
+}

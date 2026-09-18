@@ -1,58 +1,30 @@
-# UNE Sino-Gateway — MCP Server
+# AtoA — Multi-Jurisdiction Legal Gateway (FR · EU · CN)
 
-[![Status](https://img.shields.io/badge/status-operational-3fb950.svg)](https://une.education)
-[![Latency](https://img.shields.io/badge/latency-<10ms-58a6ff.svg)](https://legal.une.education/sino/index.php?action=ping)
-[![Protocol](https://img.shields.io/badge/MCP-standardized-orange.svg)](https://modelcontextprotocol.io)
+[![OpenAPI](https://img.shields.io/badge/OpenAPI-3.1.0-green.svg)](https://legal.une.education/openapi.json)
+[![llms.txt](https://img.shields.io/badge/Agent-llms.txt-blue.svg)](https://legal.une.education/llms.txt)
+[![Status](https://img.shields.io/badge/Status-Operational-brightgreen.svg)](https://legal.une.education/hub.php)
 
-Official **Model Context Protocol (MCP)** server for **UNE (Unified Norms Engine)**.  
-Enables LLM agents (Claude Desktop, Cursor, LibreChat, Devin) to perform sub-10ms **deterministic legal computations** for cross-border trade disputes between Western/International standards (**CISG**, French Law) and the **Civil Code of the People's Republic of China (PRC
-Book III)**.
+API machine-to-machine (M2M) ultra-rapide (< 10 ms) pour agents IA autonomes et systèmes d'audit de conformité, couvrant le droit positif français, le cadre réglementaire européen et le droit statutaire chinois.
 
 ---
 
-## Core Capabilities
+## 🏛️ Corpus Juridique Indexé
 
-- __Zero-Hallucination Inspection Cutoffs__: Strictly computes statutory inspection deadlines and statutes	of repose under PRC Art. 621 & CISG Art. 38/39.
-- __Opposable Dispute Notice Generation__: Formats bilingual (English/Chinese) notices of non-conformity with statutory remedies under PRC Art. 582/615.
-- __CIETAC Arbitration Clause Enforcement__: Generates compliant model arbitration clauses under PRC Arbitration Law Art. 16/18.
-- __Cryptographic Audit Seal__: Appends deterministic SHA-256 signatures and UTC timestamps to every output for legal traceability.
-
----
-
-## Available Tools
-
-* `sino_inspection_delay`: Evaluates actionable periods and forclusion dates.
-* `sino_defect_notice`: Emits a formal bilingual notice opposable under PRC law.
-* `sino_cietac_clause`: Produces a strictly valid CIETAC arbitration clause.
-* `sino_matrix_concordance`: Cross-references articles across FR, EU, US, CISG, and PRC.
+| Juridiction | Périmètre | Format & Particularités |
+| :--- | :--- | :--- |
+| **France (FR)** | Codes consolidés (Légifrance), conventions collectives (KALI), jurisprudence (Judilibre / Cassation) | Plein texte SQLite FTS5 natif, pivots articles-jurisprudence |
+| **Union Européenne (EU)** | Règlements & directives clés (*AI Act, RGPD, DSA, DMA, NIS2, Data Act*) | Bilingue miroir FR/EN, identifiants CELEX, sources EUR-Lex |
+| **Chine (CN)** | Code civil 2020, PIPL, Lois sur les brevets 2020 et procédure civile 2023 | Texte officiel chinois natif (caractères simplifiés), sources canoniques |
 
 ---
 
-## Claude Desktop Configuration
+## ⚡ Architecture d'Accès par Tiers
 
-```json
-{
-  "mcpServers": {
-    "une-sino-gateway": {
-      "command": "python3",
-      "args": ["/path/to/mcp_server.py"]
-    }
-  }
-}
-```
+### Tier 1 : `/v1/search` (1 crédit)
+Recherche plein texte déterministe via FTS5.
+```bash
+# Recherche UE (AI Act / transparence)
+curl -s "[https://legal.une.education/api.php?endpoint=v1/search&jurisdiction=EU&q=transparence&limit=5](https://legal.une.education/api.php?endpoint=v1/search&jurisdiction=EU&q=transparence&limit=5)"
 
-Zero external dependencies (uses Python standard library).
-
----
-
-## Endpoints & Metadata
-
-- Langing Page: https://une.education
-- OpenAPI 3.1 Spec: https://legal.une.education/sino/openapi.json
-- Agent Manifest (llms.txt): https://legal.une.education/sino/llms.txt
-- Operations & Security: ops@une.education
-
----
-
-## License
-MIT License. Engineered by UNE Operations (2026).
+# Recherche Chine (Brevets)
+curl -s "[https://legal.une.education/api.php?endpoint=v1/search&jurisdiction=CN&q=专利&limit=5](https://legal.une.education/api.php?endpoint=v1/search&jurisdiction=CN&q=专利&limit=5)"

@@ -1,0 +1,158 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AtoA Multi-Jurisdiction Legal Gateway API",
+    "description": "High-velocity, sub-millisecond legal intelligence platform for autonomous AI agents covering French (Légifrance, KALI, Judilibre), European Union (EUR-Lex bilingual FR/EN), and Chinese statutory law (RPC).",
+    "version": "2.4.0"
+  },
+  "servers": [
+    {
+      "url": "https://legal.une.education",
+      "description": "Production Edge Hub"
+    }
+  ],
+  "paths": {
+    "/api.php?endpoint=ping": {
+      "get": {
+        "summary": "Health check & Index Status",
+        "description": "Returns gateway status and available provisions count.",
+        "responses": {
+          "200": { "description": "Gateway operational" }
+        }
+      }
+    },
+    "/api.php?endpoint=register": {
+      "post": {
+        "summary": "Autonomous Agent Registration",
+        "description": "Self-provision an API key loaded with 10,000 initial credits.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Compliance_Agent_01" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "API Key successfully created" }
+        }
+      }
+    },
+    "/api.php?endpoint=v1/search": {
+      "get": {
+        "summary": "Tier 1: High-Speed Full-Text Search (1 credit)",
+        "description": "Deterministic keyword search across France, EU, or Chinese law using FTS5.",
+        "security": [{ "BearerAuth": [] }, []],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "Search query or keyword",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "jurisdiction",
+            "in": "query",
+            "required": false,
+            "description": "Target legal system: FR, EU, or CN",
+            "schema": { "type": "string", "enum": ["FR", "EU", "CN"], "default": "FR" }
+          },
+          {
+            "name": "corpus",
+            "in": "query",
+            "required": false,
+            "description": "Sub-corpus for France: legi, kali, or juri",
+            "schema": { "type": "string", "enum": ["legi", "kali", "juri"], "default": "legi" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 10, "maximum": 50 }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Search results array" }
+        }
+      }
+    },
+    "/api.php?endpoint=v1/inspect": {
+      "get": {
+        "summary": "Tier 2: Deep Provision Inspection (5 credits)",
+        "description": "Retrieves full canonical text and authoritative metadata by identifier (e.g. EU_AI_ACT_ART_6, CN_..., LEGIARTI...).",
+        "security": [{ "BearerAuth": [] }, []],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "Canonical provision identifier",
+            "schema": { "type": "string", "example": "EU_AI_ACT_ART_6" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Full text and legislative metadata" },
+          "404": { "description": "Identifier not found" }
+        }
+      }
+    },
+    "/api.php?endpoint=v1/oracle": {
+      "get": {
+        "summary": "Tier 3: Multi-Jurisdiction Alignment Oracle (20 credits)",
+        "description": "Cross-border regulatory alignment matrix comparing EU, China, and France with statutory divergence evaluation.",
+        "security": [{ "BearerAuth": [] }, []],
+        "parameters": [
+          {
+            "name": "subject",
+            "in": "query",
+            "required": true,
+            "description": "Subject matter: ia, donnees, brevets, travail, litige",
+            "schema": { "type": "string", "example": "ia" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Comparative matrix and risk evaluation" }
+        }
+      }
+    },
+    "/api.php?endpoint=v1/cross": {
+      "get": {
+        "summary": "Tier 2: Code & Case Law Cross-Reference (5 credits)",
+        "description": "Retrieves French code provision alongside citing Cour de cassation jurisprudence.",
+        "security": [{ "BearerAuth": [] }, []],
+        "parameters": [
+          {
+            "name": "article",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "example": "L1234-1" }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "default": "Code du travail" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Cross-referenced statute and case law" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key (sk_live_...)"
+      }
+    }
+  }
+}

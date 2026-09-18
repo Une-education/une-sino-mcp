@@ -1,0 +1,60 @@
+# AtoA Multi-Jurisdiction Legal Gateway — M2M High-Velocity API (FR / EU / CN)
+
+> Ultra-low-latency, deterministic access to French legislation (Légifrance/KALI), EU Regulations (EUR-Lex bilingual FR/EN), and Chinese statutory law (RPC original text) for autonomous AI agents.
+
+## System Architecture & Coverage
+- **France (FR)**: Consolidated Codes (Légifrance), Collective Agreements (KALI), Case Law (Judilibre).
+- **European Union (EU)**: Core bilingual regulations & directives (AI Act, GDPR, DSA, DMA, NIS2, Data Act).
+- **China (CN)**: Key civil, commercial, and procedural codes (Civil Code 2020, PIPL, Patent Law 2020, Civil Procedure 2023).
+- **Format**: Deterministic raw JSON, sub-millisecond local SQLite + FTS5 indexing.
+
+## Structured Tiered Access
+
+### Tier 1 : Rapid Search & FTS5 (/v1/search)
+- Cost: 1 credit
+- Endpoint: `GET /api.php?endpoint=v1/search`
+- Parameters:
+  - `q` (string, required): Search query or keyword
+  - `jurisdiction` (string, optional): `FR` (default), `EU`, or `CN`
+  - `corpus` (string, optional for FR): `legi`, `kali`, `juri`
+  - `limit` (int, default 10, max 50)
+- Example:
+  `GET /api.php?endpoint=v1/search&jurisdiction=EU&q=transparence&limit=5`
+  `GET /api.php?endpoint=v1/search&jurisdiction=CN&q=专利&limit=5`
+
+### Tier 2 : Deep Inspection & Canonical Data (/v1/inspect)
+- Cost: 5 credits
+- Endpoint: `GET /api.php?endpoint=v1/inspect`
+- Parameters:
+  - `id` (string, required): Canonical provision identifier
+    - EU syntax: `EU_{ACT}_{ART}` (e.g. `EU_AI_ACT_ART_6`) -> Returns bilingual FR/EN text, CELEX & official EUR-Lex URL.
+    - CN syntax: `CN_{HASH}` -> Returns original Chinese text, English/French translation if available, official source.
+    - FR syntax: `LEGIARTI...` or `KALIARTI...`
+- Example:
+  `GET /api.php?endpoint=v1/inspect&id=EU_AI_ACT_ART_6`
+
+### Tier 2 (Legacy/Cross) : Pivot Code + Jurisprudence (/v1/cross)
+- Cost: 5 credits
+- Endpoint: `GET /api.php?endpoint=v1/cross`
+- Parameters:
+  - `article` (string, required): e.g. "L1234-1"
+  - `code` (string, optional, default: "Code du travail")
+  - `idcc` (string, optional): e.g. "1486"
+
+### Tier 3 : Autonomous Multi-Jurisdiction Oracle (/v1/oracle)
+- Cost: 20 credits
+- Endpoint: `GET /api.php?endpoint=v1/oracle`
+- Parameters:
+  - `subject` (string, required): Domain keyword (e.g. "ia", "donnees", "brevets", "travail", "litige")
+- Output: Bilateral alignment matrix across EU, China, and France with risk assessment and drill-down identifiers.
+- Example:
+  `GET /api.php?endpoint=v1/oracle&subject=ia`
+
+### Agent Registration & Authentication
+- Self-provisioning endpoint: `POST /api.php?endpoint=register`
+  - Payload: `{"name": "AgentName"}`
+  - Preloaded with 10,000 free trial credits.
+- Authorization header: `Authorization: Bearer sk_live_...`
+
+## Machine Specifications
+- OpenAPI 3.1 Spec: https://legal.une.education/openapi.json

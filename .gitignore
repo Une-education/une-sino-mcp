@@ -1,0 +1,6 @@
+*.sqlite*
+*.log
+*.bak*
+harvest_*_state.txt
+piste_token_cache.json
+__pycache__/
