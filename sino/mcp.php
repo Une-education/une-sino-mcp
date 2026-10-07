@@ -88,7 +88,7 @@ $tools = [
         'description' => 'Provides legally compliant CIETAC arbitration model clause in Chinese and English.',
         'inputSchema' => [
             'type' => 'object',
-            'properties' => []
+            'properties' => (object)[]
         ]
     ],
     [
@@ -132,6 +132,16 @@ function executeLocalAction($actionParams) {
     ]);
     $res = (!empty($url)) ? @file_get_contents($url, false, $ctx) : false;
     return $res ? json_decode($res, true) : ['error' => 'Internal router unreachable'];
+}
+
+if ($method === 'notifications/initialized' || ($id === null && str_starts_with((string)$method, 'notifications/'))) {
+    try {
+        $logDb = new PDO('sqlite:' . __DIR__ . '/sino_gateway.sqlite');
+        $stmt = $logDb->prepare("INSERT INTO mcp_logs (ip, method, user_agent, payload, exec_time_ms) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$_SERVER['REMOTE_ADDR'] ?? 'cli', $method, $_SERVER['HTTP_USER_AGENT'] ?? 'unknown', substr($rawInput, 0, 500), 0.5]);
+    } catch (\Throwable $e) {}
+    http_response_code(204);
+    exit;
 }
 
 if ($method === 'initialize') {
