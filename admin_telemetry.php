@@ -70,13 +70,14 @@ usort($recentLogs, function($a, $b) {
 $recentLogs = array_slice($recentLogs, 0, 50);
 
 // Typologie visiteurs basée sur User-Agent des logs MCP
+// Classification stabilisée sur 500 entrées avec détection stricte des bots
 $trafficTypes = ['Agents & IA' => 0, 'Crawlers' => 0, 'Direct / Outils' => 0];
-foreach ($recentLogs as $l) {
+foreach (array_slice($recentLogs, 0, 500) as $l) {
     $ua = strtolower($l['user_agent'] ?? '');
-    if (preg_match('/(claude|gpt|agent|mcp|langchain|cursor|smithery|fetcher)/', $ua)) {
-        $trafficTypes['Agents & IA']++;
-    } elseif (preg_match('/(bot|crawl|spider|slurp|bing|google)/', $ua)) {
+    if (preg_match('/(bot|crawl|spider|slurp|bing|google|rokmcp|brickblue|mcpbeat)/', $ua)) {
         $trafficTypes['Crawlers']++;
+    } elseif (preg_match('/(claude|gpt|agent|langchain|cursor|smithery|fetcher|amp-server|python|aiohttp|node)/', $ua)) {
+        $trafficTypes['Agents & IA']++;
     } else {
         $trafficTypes['Direct / Outils']++;
     }

@@ -104,8 +104,8 @@ $tools = [
     ]
 ];
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    echo json_encode([
+if ($_SERVER['REQUEST_METHOD'] === 'GET' || !$request || !isset($request['method'])) {
+    sendJsonRpcResponse(null, [
         'status' => 'operational',
         'server' => 'UNE Sino-Gateway MCP Server',
         'protocol' => 'MCP/JSON-RPC-2.0',
@@ -113,9 +113,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'rpc' => 'https://legal.une.education/sino/mcp.php',
             'spec' => 'https://legal.une.education/sino/openapi.json'
         ],
-        'tools_count' => count($tools)
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    exit;
+        'tools_count' => count($tools),
+        'pricing' => [
+            'model' => 'freemium',
+            'rate_limit' => '60 requests/minute',
+            'free_tier' => [
+                'included_calls' => 1000,
+                'metered_methods' => ['tools/call']
+            ],
+            'plans' => [
+                [
+                    'id' => 'dev_50k',
+                    'name' => 'Developer Access Pack',
+                    'credits' => 50000,
+                    'price_eur' => 29.00,
+                    'checkout_url' => 'https://legal.une.education/checkout.php?pack=dev_50k'
+                ],
+                [
+                    'id' => 'pro_200k',
+                    'name' => 'Enterprise Access Pack',
+                    'credits' => 200000,
+                    'price_eur' => 89.00,
+                    'checkout_url' => 'https://legal.une.education/checkout.php?pack=pro_200k'
+                ]
+            ]
+        ]
+    ], null, $t_start, 'GET/info', $rawInput ?: '');
 }
 
 $id = $request['id'] ?? null;
