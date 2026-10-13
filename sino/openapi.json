@@ -1,0 +1,120 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "UNE Sino-Gateway M2M API",
+    "version": "1.2.0",
+    "contact": { "name": "UNE Operations", "email": "ops@une.education" },
+    "description": "Deterministic legal cross-referencing, dispute deadline calculation, bilingual notice generation, CIETAC arbitration clauses, and GACC customs valuation between PRC Civil Code/Customs and CISG/Western standards."
+  },
+  "servers": [
+    {
+      "url": "https://legal.une.education/sino"
+    }
+  ],
+  "paths": {
+    "/index.php": {
+      "get": {
+        "summary": "Execute deterministic Sino-Occidental legal & customs operations",
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["ping", "matrix", "inspection_delay", "defect_notice", "cietac_clause", "customs_valuation"]
+            }
+          },
+          {
+            "name": "topic",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" },
+            "description": "Matrix topic key (e.g. conformite_marchandises)"
+          },
+          {
+            "name": "arrival_date",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "format": "date" },
+            "description": "Cargo arrival date (YYYY-MM-DD)"
+          },
+          {
+            "name": "defect_type",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "enum": ["apparent", "hidden"], "default": "apparent" }
+          },
+          {
+            "name": "contract_ref",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "bl_number",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "defect_summary",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "remedy",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "enum": ["replacement", "price_reduction", "rescission"], "default": "replacement" }
+          },
+          {
+            "name": "seat",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "default": "Beijing" }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "default": "English" }
+          },
+          {
+            "name": "arbitrators",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "enum": [1, 3], "default": 3 }
+          },
+          {
+            "name": "hs_code",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" },
+            "description": "2, 4 or 6-digit Harmonized System code for China import"
+          },
+          {
+            "name": "cif_value_eur",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "number" },
+            "description": "Declared CIF customs value in EUR"
+          },
+          {
+            "name": "exchange_rate_eur_cny",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "number", "default": 7.80 },
+            "description": "EUR to CNY conversion rate"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deterministic legal or customs liquidation result with SHA-256 cryptographic audit seal"
+          }
+        }
+      }
+    }
+  }
+}

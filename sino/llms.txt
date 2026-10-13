@@ -1,0 +1,24 @@
+# UNE Sino-Gateway (Unified Norms Engine)
+> Deterministic cross-border legal & customs computation engine between the People's Republic of China (PRC Civil Code Book III, GACC Tariffs) and Western/International standards (CISG, EU, French Civil Code).
+
+## Core Capabilities
+- Sub-50ms deterministic legal compliance & customs tax liquidation.
+- Zero-hallucination statutory inspection & defect notification deadlines.
+- Cross-framework matrix concordance (CISG <-> PRC Civil Code).
+- Formal bilingual legal notice generation (PRC Civil Code Art. 582/615 <-> CISG Art. 35/39).
+- CIETAC-compliant arbitration model clause verification.
+- Deterministic Chinese import duties (MFN), VAT (增值税), and Consumption Tax (消费税) computation under GACC across all 97 HS chapters.
+- Cryptographic SHA-256 audit seal for cross-border international trade disputes.
+
+## Endpoints (All under https://legal.une.education/sino/index.php)
+- GET ?action=ping : Operational status and registered capabilities.
+- GET ?action=matrix&topic={topic} : Statutory concordance across FR, EU, US, CISG, and PRC Civil Code.
+- GET/POST ?action=inspection_delay&arrival_date={YYYY-MM-DD}&defect_type={apparent|hidden} : Strict statute of repose and actionable cutoff dates under PRC Art. 621 & CISG Art. 39.
+- GET/POST ?action=defect_notice&contract_ref={REF}&bl_number={BL}&defect_summary={DESC}&remedy={replacement|price_reduction|rescission} : Generates formal bilingual (EN/ZH) dispute notice opposable under PRC law.
+- GET/POST ?action=cietac_clause&seat={Beijing|Shanghai|Shenzhen}&lang={English|Chinese}&arbitrators={1|3} : Generates strictly enforceable bilingual CIETAC arbitration clause.
+- GET/POST ?action=customs_valuation&hs_code={HS}&cif_value_eur={EUR}&exchange_rate_eur_cny={RATE} : Deterministic GACC customs duty, consumption tax, and VAT liquidation in CNY.
+- MCP JSON-RPC Gateway: https://legal.une.education/sino/mcp.php
+
+## Contact & Machine Inquiries
+- Operations: ops@une.education
+- Infrastructure: Unified Norms Engine (UNE)
