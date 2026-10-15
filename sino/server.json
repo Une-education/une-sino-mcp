@@ -1,18 +1,6 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.Une-education/sino-gateway",
-  "title": "UNE Sino-Gateway",
-  "description": "PRC Civil Code & CISG legal computation engine for Sino-Occidental trade dispute settlement.",
-  "version": "1.0.0",
-  "websiteUrl": "https://legal.une.education/sino",
-  "repository": {
-    "url": "https://github.com/Une-education/une-sino-mcp.git",
-    "source": "github"
-  },
-  "remotes": [
-    {
-      "type": "streamable-http",
-      "url": "https://legal.une.education/sino/mcp.php"
-    }
-  ]
+  "name": "sino-gateway",
+  "version": "1.3.1",
+  "description": "Deterministic China trade & data compliance engine: GACC customs duties, CCC/NMPA/CIFER clearance, and cross-border PIPL/DSL/CAC data transfer compliance.",
+  "endpoint": "https://legal.une.education/sino/mcp.php"
 }
